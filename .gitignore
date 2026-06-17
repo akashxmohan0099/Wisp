@@ -1,0 +1,25 @@
+.DS_Store
+
+# SwiftPM / Xcode
+.build/
+.swiftpm/
+.swiftpm-cache/
+DerivedData/
+*.xcuserstate
+*.xcuserdata/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# Local runtime / package output
+dist/
+*.app
+support/*.iconset/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+openai-key
