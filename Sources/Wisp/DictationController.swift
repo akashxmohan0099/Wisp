@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import WispCore
 
 enum DictationMode: String {
     case dictate
@@ -220,7 +221,7 @@ final class DictationController: ObservableObject {
     }
 
     private func prepareFinalText(_ text: String, mode: DictationMode) async -> String {
-        let cleaned = Self.lightlyCleanTranscript(text)
+        let cleaned = TranscriptCleaner.cleaned(text)
 
         guard !cleaned.isEmpty else {
             return ""
@@ -242,44 +243,6 @@ final class DictationController: ObservableObject {
                 return cleaned
             }
         }
-    }
-
-    private static func lightlyCleanTranscript(_ text: String) -> String {
-        var result = text
-            .replacingOccurrences(of: #"\s+"#, with: " ", options: .regularExpression)
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        let fillerPatterns = [
-            #"(?i)\b(um+|uh+|erm+|ah+)\b[, ]*"#,
-            #"(?i)\b(you know|i mean|kind of|sort of)\b[, ]*"#
-        ]
-
-        for pattern in fillerPatterns {
-            result = result.replacingOccurrences(
-                of: pattern,
-                with: "",
-                options: .regularExpression
-            )
-        }
-
-        result = result
-            .replacingOccurrences(of: #"\s+([,.!?;:])"#, with: "$1", options: .regularExpression)
-            .replacingOccurrences(of: #"\s+"#, with: " ", options: .regularExpression)
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        guard !result.isEmpty else {
-            return ""
-        }
-
-        let first = result.prefix(1).uppercased()
-        let rest = result.dropFirst()
-        result = first + rest
-
-        if let last = result.last, !".!?".contains(last) {
-            result += "."
-        }
-
-        return result
     }
 
     private func handleStreamingEvent(_ event: StreamingTranscriptEvent) {

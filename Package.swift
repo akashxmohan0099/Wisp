@@ -14,11 +14,19 @@ let package = Package(
         )
     ],
     targets: [
+        .target(
+            name: "WispCore"
+        ),
         .executableTarget(
             name: "Wisp",
+            dependencies: ["WispCore"],
             resources: [
                 .process("Resources")
             ]
+        ),
+        .testTarget(
+            name: "WispCoreTests",
+            dependencies: ["WispCore"]
         )
     ]
 )

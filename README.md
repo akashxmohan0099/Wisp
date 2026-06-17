@@ -117,6 +117,12 @@ The first run of a model may download weights.
 
 ## Development
 
+Run the full local check:
+
+```bash
+./scripts/test.sh
+```
+
 Build:
 
 ```bash
