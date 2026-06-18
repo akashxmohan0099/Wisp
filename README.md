@@ -1,6 +1,8 @@
 # Wisp
 
-Wisp is a small macOS dictation utility that floats above your desktop. Click it, speak, and Wisp inserts the final text into the app you were using.
+Wisp is a small MacBook/macOS dictation utility that floats above your desktop. Click it, speak, and Wisp inserts the final text into the app you were using.
+
+This repository is the macOS app only. There is no iPhone, iPad, or mobile app target in this repo.
 
 It has two modes:
 
@@ -28,10 +30,23 @@ The app is intentionally simple: native macOS UI, local microphone capture, loca
 - Xcode command line tools.
 - Python 3.10 or later. Homebrew Python is preferred.
 - `ffmpeg` available on `PATH` for testing and some Whisper workflows.
+- A local Whisper model. The setup script downloads the default model for you.
 
 ## Install From Source
 
-Clone the repo and install the local Whisper runtime:
+1. Install the basic Mac developer tools:
+
+```bash
+xcode-select --install
+```
+
+2. Install Homebrew dependencies:
+
+```bash
+brew install python ffmpeg
+```
+
+3. Clone the repo and install the local Whisper runtime:
 
 ```bash
 git clone https://github.com/akashxmohan0099/Wisp.git
@@ -39,7 +54,9 @@ cd Wisp
 ./scripts/setup_whisper.sh
 ```
 
-Build the app bundle:
+The setup script creates `~/.wisp/venv`, installs [`faster-whisper`](https://github.com/SYSTRAN/faster-whisper), and downloads the default local model, [`base.en`](https://huggingface.co/Systran/faster-whisper-base.en). The model is stored in your normal Hugging Face cache, not committed to this repo.
+
+4. Build and open the app:
 
 ```bash
 ./scripts/build_app.sh
@@ -54,6 +71,35 @@ You can move `dist/Wisp.app` into `/Applications` after building:
 cp -R dist/Wisp.app /Applications/
 open /Applications/Wisp.app
 ```
+
+## Local Whisper Model
+
+Yes, each person running Wisp needs a local Whisper runtime and model on their own Mac. That is what keeps Dictate mode local.
+
+The simplest path is:
+
+```bash
+./scripts/setup_whisper.sh
+```
+
+By default this downloads `base.en`, which is fast and good enough for quick dictation. To download a different model during setup:
+
+```bash
+WISP_MODEL_DOWNLOAD=large-v3-turbo ./scripts/setup_whisper.sh
+```
+
+Then run Wisp with the same model:
+
+```bash
+export WISP_MODEL="large-v3-turbo"
+open dist/Wisp.app
+```
+
+Useful links:
+
+- [`faster-whisper` runtime](https://github.com/SYSTRAN/faster-whisper)
+- [`base.en` model](https://huggingface.co/Systran/faster-whisper-base.en)
+- [`large-v3-turbo` model](https://huggingface.co/Systran/faster-whisper-large-v3-turbo)
 
 ## OpenAI Setup For Compose
 
