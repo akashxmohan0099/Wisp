@@ -123,12 +123,6 @@ Run the full local check:
 ./scripts/test.sh
 ```
 
-Build the iPhone app and keyboard extension for simulator:
-
-```bash
-./scripts/test_ios.sh
-```
-
 Build:
 
 ```bash
